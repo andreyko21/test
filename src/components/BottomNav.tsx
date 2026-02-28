@@ -1,52 +1,40 @@
 'use client';
 
-import { Home, List, BarChart2, Settings, PlusCircle } from 'lucide-react';
+import { Home, List, BarChart2, Target } from 'lucide-react';
 
 interface BottomNavProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
-  onAddClick: () => void;
+  onAddClick?: () => void;
 }
 
 const tabs = [
-  { id: 'home', label: 'Головна', icon: Home },
-  { id: 'transactions', label: 'Операції', icon: List },
-  { id: 'add', label: '', icon: PlusCircle, isAction: true },
-  { id: 'analytics', label: 'Аналітика', icon: BarChart2 },
-  { id: 'settings', label: 'Налаштування', icon: Settings },
+  { id: 'home', label: 'Огляд', icon: Home },
+  { id: 'transactions', label: 'Транзакції', icon: List },
+  { id: 'analytics', label: 'Бюджети', icon: BarChart2 },
+  { id: 'budget', label: 'Цілі', icon: Target },
 ];
 
-export function BottomNav({ activeTab, onTabChange, onAddClick }: BottomNavProps) {
+export function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   return (
-    <nav className="tab-bar">
+    <nav style={{
+      position: 'fixed',
+      bottom: 0,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      width: '100%',
+      maxWidth: 430,
+      background: 'rgba(10,12,30,0.75)',
+      backdropFilter: 'blur(24px)',
+      WebkitBackdropFilter: 'blur(24px)',
+      borderTop: '1px solid rgba(255,255,255,0.08)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      padding: '10px 0 24px',
+      zIndex: 30,
+    }}>
       {tabs.map(tab => {
-        if (tab.isAction) {
-          return (
-            <button
-              key={tab.id}
-              onClick={onAddClick}
-              style={{
-                background: 'var(--accent)',
-                border: 'none',
-                borderRadius: '50%',
-                width: 56,
-                height: 56,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(99,102,241,0.4)',
-                transform: 'translateY(-8px)',
-                transition: 'transform 0.2s, box-shadow 0.2s',
-              }}
-              onMouseDown={e => (e.currentTarget.style.transform = 'translateY(-6px) scale(0.95)')}
-              onMouseUp={e => (e.currentTarget.style.transform = 'translateY(-8px)')}
-            >
-              <tab.icon size={28} color="white" strokeWidth={2.5} />
-            </button>
-          );
-        }
-
         const isActive = activeTab === tab.id;
         return (
           <button
@@ -56,26 +44,41 @@ export function BottomNav({ activeTab, onTabChange, onAddClick }: BottomNavProps
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 3,
+              gap: 4,
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              padding: '4px 12px',
+              padding: '4px 16px',
               borderRadius: 12,
               transition: 'all 0.2s',
-              color: isActive ? 'var(--accent)' : 'var(--text-muted)',
-              minWidth: 60,
+              position: 'relative',
             }}
           >
+            {/* Active glow dot */}
+            {isActive && (
+              <span style={{
+                position: 'absolute',
+                top: -2,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 4,
+                height: 4,
+                borderRadius: '50%',
+                background: '#00e5cc',
+                boxShadow: '0 0 8px #00e5cc, 0 0 16px rgba(0,229,204,0.5)',
+              }} />
+            )}
             <tab.icon
               size={22}
-              strokeWidth={isActive ? 2.5 : 1.8}
-              color={isActive ? 'var(--accent)' : 'var(--text-muted)'}
+              strokeWidth={isActive ? 2 : 1.5}
+              color={isActive ? '#00e5cc' : 'rgba(255,255,255,0.35)'}
+              style={isActive ? { filter: 'drop-shadow(0 0 6px rgba(0,229,204,0.7))' } : undefined}
             />
             <span style={{
               fontSize: 10,
               fontWeight: isActive ? 600 : 400,
-              color: isActive ? 'var(--accent)' : 'var(--text-muted)',
+              color: isActive ? '#00e5cc' : 'rgba(255,255,255,0.35)',
+              letterSpacing: 0.3,
             }}>
               {tab.label}
             </span>
